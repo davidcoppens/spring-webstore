@@ -155,4 +155,9 @@ public class InMemoryProductRepository implements ProductRepository {
 		}
 		return result;
 	}
+	
+	@Override
+	public void addProduct(Product product) {
+		this.listOfProducts.add(product);
+	}
 }

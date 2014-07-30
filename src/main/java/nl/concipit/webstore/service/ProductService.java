@@ -14,4 +14,5 @@ public interface ProductService {
 	Set<Product> getProductsByFilter(Map<String, List<String>> filterParams);
 	Set<Product> getProductsByPriceFilter(Map<String, List<String>> filterParams) throws ParseException;
 	List<Product> getProductsByManufacturer(String manufacturer);
+	void addProduct(Product product);
 }

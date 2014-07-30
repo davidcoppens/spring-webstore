@@ -19,4 +19,6 @@ public interface ProductRepository {
 	Set<Product> getProductsByFilter(Map<String, List<String>> filterParams);
 	
 	Set<Product> getProductsByPriceFilter(Map<String, List<String>> filterParams) throws ParseException;
+	
+	void addProduct(Product product);
 }

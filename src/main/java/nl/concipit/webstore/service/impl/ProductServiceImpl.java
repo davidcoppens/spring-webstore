@@ -48,4 +48,9 @@ public class ProductServiceImpl implements ProductService {
 			Map<String, List<String>> filterParams) throws ParseException {
 		return repository.getProductsByPriceFilter(filterParams);
 	}
+	
+	@Override
+	public void addProduct(Product product) {
+		repository.addProduct(product);
+	}
 }
