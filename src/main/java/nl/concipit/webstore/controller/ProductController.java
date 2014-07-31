@@ -12,6 +12,10 @@ import nl.concipit.webstore.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
 	@Autowired
 	private ProductService productService;
+
+	@InitBinder
+	public void initialiseBinding(WebDataBinder binder) {
+		binder.setDisallowedFields("discontinued", "unitsInOrder");
+	}
 
 	@RequestMapping
 	public String list(Model model) {
@@ -70,31 +79,38 @@ public class ProductController {
 		for (Product p : productService.getProductsByCategory(category)) {
 			result.add(p);
 		}
-		
+
 		if (manufacturer != null) {
 			result.retainAll(productService
-						.getProductsByManufacturer(manufacturer));
-			
+					.getProductsByManufacturer(manufacturer));
+
 		}
 		try {
-			result.retainAll(productService.getProductsByPriceFilter(filterParams));
+			result.retainAll(productService
+					.getProductsByPriceFilter(filterParams));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		model.addAttribute("products", result);
 		return "products";
 
 	}
-	
-	@RequestMapping(value="/add", method= RequestMethod.GET)
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String getAddNewProductForm(Model model) {
 		model.addAttribute("newProduct", new Product());
 		return "addProduct";
 	}
-	
-	@RequestMapping(value="/add", method = RequestMethod.POST)
-	public String processAddNewProductForm(@ModelAttribute("newProduct") Product newProduct) {
+
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String processAddNewProductForm(
+			@ModelAttribute("newProduct") Product newProduct, BindingResult result) {
+		String[] suppressedFields = result.getSuppressedFields();
+		if (suppressedFields.length > 0) {
+			throw new RuntimeException("Attempting to bind disallowed fields: "
+					+ StringUtils.arrayToCommaDelimitedString(suppressedFields));
+		}
 		productService.addProduct(newProduct);
 		return "redirect:/products";
 	}
