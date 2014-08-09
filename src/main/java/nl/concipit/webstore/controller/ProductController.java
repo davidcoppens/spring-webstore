@@ -1,10 +1,14 @@
 package nl.concipit.webstore.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import nl.concipit.webstore.domain.Product;
 import nl.concipit.webstore.service.ProductService;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/products")
@@ -32,6 +37,9 @@ public class ProductController {
 	@InitBinder
 	public void initialiseBinding(WebDataBinder binder) {
 		binder.setDisallowedFields("discontinued", "unitsInOrder");
+		binder.setAllowedFields("name", "productId", "unitPrice",
+				"description", "manufacturer", "category", "unitsInStock",
+				"productImage", "condition");
 	}
 
 	@RequestMapping
@@ -105,12 +113,30 @@ public class ProductController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String processAddNewProductForm(
-			@ModelAttribute("newProduct") Product newProduct, BindingResult result) {
+			@ModelAttribute("newProduct") Product newProduct,
+			BindingResult result, HttpServletRequest request) {
 		String[] suppressedFields = result.getSuppressedFields();
 		if (suppressedFields.length > 0) {
 			throw new RuntimeException("Attempting to bind disallowed fields: "
 					+ StringUtils.arrayToCommaDelimitedString(suppressedFields));
 		}
+
+		MultipartFile productImage = newProduct.getProductImage();
+		String rootDirectory = request.getSession().getServletContext()
+				.getRealPath("/");
+
+		if (productImage != null && !productImage.isEmpty()) {
+
+			try {
+				productImage.transferTo(new File(rootDirectory
+						+ "\\resources\\images\\" + newProduct.getProductId()
+						+ ".png"));
+			} catch (IllegalStateException | IOException e) {
+				throw new RuntimeException("Product image saving failed", e);
+			}
+
+		}
+
 		productService.addProduct(newProduct);
 		return "redirect:/products";
 	}
