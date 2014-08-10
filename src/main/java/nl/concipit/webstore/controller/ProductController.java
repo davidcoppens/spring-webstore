@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import nl.concipit.webstore.domain.Product;
+import nl.concipit.webstore.exception.NoProductsFoundUnderCategoryException;
+import nl.concipit.webstore.exception.ProductNotFoundException;
 import nl.concipit.webstore.service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/products")
@@ -39,7 +43,7 @@ public class ProductController {
 		binder.setDisallowedFields("discontinued", "unitsInOrder");
 		binder.setAllowedFields("name", "productId", "unitPrice",
 				"description", "manufacturer", "category", "unitsInStock",
-				"productImage", "condition");
+				"productImage", "condition","language");
 	}
 
 	@RequestMapping
@@ -57,8 +61,13 @@ public class ProductController {
 	@RequestMapping("/{category}")
 	public String getProductsByCategory(Model model,
 			@PathVariable("category") String category) {
-		model.addAttribute("products",
-				productService.getProductsByCategory(category));
+		List<Product> products = productService.getProductsByCategory(category);
+
+		if (products == null || products.isEmpty()) {
+			throw new NoProductsFoundUnderCategoryException();
+		}
+
+		model.addAttribute("products", products);
 		return "products";
 	}
 
@@ -139,5 +148,15 @@ public class ProductController {
 
 		productService.addProduct(newProduct);
 		return "redirect:/products";
+	}
+	
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ModelAndView handleError(HttpServletRequest req, ProductNotFoundException exception) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("invalidProductId", exception.getProductId());
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURL() + "?" + req.getQueryString());
+		mav.setViewName("productNotFound");
+		return mav;
 	}
 }

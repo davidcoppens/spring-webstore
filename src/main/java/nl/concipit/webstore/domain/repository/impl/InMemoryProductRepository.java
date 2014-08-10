@@ -11,6 +11,7 @@ import java.util.Set;
 
 import nl.concipit.webstore.domain.Product;
 import nl.concipit.webstore.domain.repository.ProductRepository;
+import nl.concipit.webstore.exception.ProductNotFoundException;
 
 import org.springframework.stereotype.Repository;
 
@@ -61,8 +62,7 @@ public class InMemoryProductRepository implements ProductRepository {
 			}
 		}
 		if (productById == null) {
-			throw new IllegalArgumentException(
-					"No products found with the product id: " + productId);
+			throw new ProductNotFoundException(productId);
 		}
 		return productById;
 	}
@@ -106,11 +106,11 @@ public class InMemoryProductRepository implements ProductRepository {
 
 		return result;
 	}
-	
+
 	@Override
 	public Set<Product> getProductsByPriceFilter(
 			Map<String, List<String>> filterParams) throws ParseException {
-		
+
 		Set<Product> result = new HashSet<Product>();
 
 		Set<String> criteria = filterParams.keySet();
@@ -119,10 +119,10 @@ public class InMemoryProductRepository implements ProductRepository {
 		DecimalFormat f = new DecimalFormat();
 		f.setParseBigDecimal(true);
 		if (criteria.contains("low")) {
-			low = (BigDecimal) f.parse(filterParams.get("low").get(0));			
+			low = (BigDecimal) f.parse(filterParams.get("low").get(0));
 		}
 		if (criteria.contains("high")) {
-			high = (BigDecimal) f.parse(filterParams.get("high").get(0));			
+			high = (BigDecimal) f.parse(filterParams.get("high").get(0));
 		}
 
 		for (Product p : listOfProducts) {
@@ -155,7 +155,7 @@ public class InMemoryProductRepository implements ProductRepository {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public void addProduct(Product product) {
 		this.listOfProducts.add(product);
