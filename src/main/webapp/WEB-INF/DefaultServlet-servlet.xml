@@ -6,18 +6,19 @@
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-	<mvc:annotation-driven enable-matrix-variables="true" />
+	<mvc:annotation-driven enable-matrix-variables="true"
+		validator="validator" />
 	<mvc:resources location="/resources/" mapping="/resource/**" />
 	<mvc:interceptors>
-		<bean class="nl.concipit.webstore.interceptor.PerformanceMonitorInterceptor"/>
+		<bean class="nl.concipit.webstore.interceptor.PerformanceMonitorInterceptor" />
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-			<property name="paramName" value="language"/>
+			<property name="paramName" value="language" />
 		</bean>
-		<bean class="nl.concipit.webstore.interceptor.AuditingInterceptor"/>
-	
+		<bean class="nl.concipit.webstore.interceptor.AuditingInterceptor" />
+
 		<bean class="nl.concipit.webstore.interceptor.PromoCodeInterceptor">
-			<property name="promoCode" value="OFF3R"/>
-			<property name="errorRedirect" value="invalidPromoCode"/>
+			<property name="promoCode" value="OFF3R" />
+			<property name="errorRedirect" value="invalidPromoCode" />
 			<property name="offerRedirect" value="products" />
 		</bean>
 	</mvc:interceptors>
@@ -30,9 +31,11 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages" />
+		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="en" />	
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
 	</bean>
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -46,6 +49,10 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
 				<ref bean="xmlView" />
 			</list>
 		</property>
+	</bean>
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="validationMessageSource" ref="messageSource" />
 	</bean>
 	<bean id="jsonView"
 		class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">

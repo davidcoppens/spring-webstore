@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import nl.concipit.webstore.domain.Product;
 import nl.concipit.webstore.exception.NoProductsFoundUnderCategoryException;
@@ -122,8 +123,13 @@ public class ProductController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String processAddNewProductForm(
-			@ModelAttribute("newProduct") Product newProduct,
+			@ModelAttribute("newProduct") @Valid Product newProduct,
 			BindingResult result, HttpServletRequest request) {
+		
+		if (result.hasErrors()) {
+			return "addProduct";
+		}
+		
 		String[] suppressedFields = result.getSuppressedFields();
 		if (suppressedFields.length > 0) {
 			throw new RuntimeException("Attempting to bind disallowed fields: "
