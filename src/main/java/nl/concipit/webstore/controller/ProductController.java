@@ -150,6 +150,11 @@ public class ProductController {
 		return "redirect:/products";
 	}
 	
+	@RequestMapping("/invalidPromoCode")
+	public String invalidPromoCode() {
+		return "invalidPromoCode";
+	}
+	
 	@ExceptionHandler(ProductNotFoundException.class)
 	public ModelAndView handleError(HttpServletRequest req, ProductNotFoundException exception) {
 		ModelAndView mav = new ModelAndView();

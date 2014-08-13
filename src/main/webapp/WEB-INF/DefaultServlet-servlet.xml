@@ -13,6 +13,13 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 			<property name="paramName" value="language"/>
 		</bean>
+		<bean class="nl.concipit.webstore.interceptor.AuditingInterceptor"/>
+	
+		<bean class="nl.concipit.webstore.interceptor.PromoCodeInterceptor">
+			<property name="promoCode" value="OFF3R"/>
+			<property name="errorRedirect" value="invalidPromoCode"/>
+			<property name="offerRedirect" value="products" />
+		</bean>
 	</mvc:interceptors>
 	<context:component-scan base-package="nl.concipit.webstore" />
 	<bean
