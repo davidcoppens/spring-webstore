@@ -15,6 +15,7 @@ import nl.concipit.webstore.domain.Product;
 import nl.concipit.webstore.exception.NoProductsFoundUnderCategoryException;
 import nl.concipit.webstore.exception.ProductNotFoundException;
 import nl.concipit.webstore.service.ProductService;
+import nl.concipit.webstore.validator.ProductValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class ProductController {
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private ProductValidator productValidator;
 
 	@InitBinder
 	public void initialiseBinding(WebDataBinder binder) {
@@ -45,6 +49,7 @@ public class ProductController {
 		binder.setAllowedFields("name", "productId", "unitPrice",
 				"description", "manufacturer", "category", "unitsInStock",
 				"productImage", "condition","language");
+		binder.setValidator(productValidator);
 	}
 
 	@RequestMapping

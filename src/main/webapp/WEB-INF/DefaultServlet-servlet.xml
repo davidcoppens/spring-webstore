@@ -33,6 +33,14 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
 		<property name="basename" value="messages" />
 		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
+	<bean id="productValidator" class="nl.concipit.webstore.validator.ProductValidator">
+		<property name="springValidators">
+			<set>
+				<ref bean="unitsInStockValidator" />
+			</set>
+		</property>
+	</bean>
+	<bean id="unitsInStockValidator" class="nl.concipit.webstore.validator.UnitsInStockValidator" />
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
