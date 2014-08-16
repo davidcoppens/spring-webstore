@@ -10,12 +10,16 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import nl.concipit.webstore.validator.Category;
+import nl.concipit.webstore.validator.ProductId;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 @XmlRootElement
 public class Product {
 	@Pattern(regexp="P[0-9]+", message="{Pattern.Product.productId.validation}")
+	@ProductId
 	private String productId;
 	@Size(min=4, max=50, message="{Size.Product.name.validation}")
 	private String name;
@@ -25,6 +29,7 @@ public class Product {
 	private BigDecimal unitPrice;
 	private String description;
 	private String manufacturer;
+	@Category
 	private String category;
 	private long unitsInStock;
 	private long unitsInOrder;
