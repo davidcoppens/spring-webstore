@@ -33,6 +33,7 @@ min.css">
 								<a
 									href=" <spring:url value="/products/product?id=${product.productId}" />"
 									class="btn btn-primary"> Details</a>
+
 							</p>
 						</div>
 					</div>

@@ -56,6 +56,10 @@ public class Cart {
         updateGrandTotal();
     }
 
+    public BigDecimal getGrandTotal() {
+        return grandTotal;
+    }
+
     public void updateGrandTotal() {
         grandTotal = new BigDecimal(0);
         for (CartItem item : cartItems.values()) {
