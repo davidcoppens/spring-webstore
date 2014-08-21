@@ -1,5 +1,6 @@
 package nl.concipit.webstore.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Digits;
@@ -17,155 +18,157 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 @XmlRootElement
-public class Product {
-	@Pattern(regexp="P[0-9]+", message="{Pattern.Product.productId.validation}")
-	@ProductId
-	private String productId;
-	@Size(min=4, max=50, message="{Size.Product.name.validation}")
-	private String name;
-	@Min(value=0, message="{Min.Product.unitPrice.validation}")
-	@Digits(integer=8, fraction=2, message="{Digits.Product.unitPrice.validation}")
-	@NotNull(message="{NotNull.Product.unitPrice.validation}")
-	private BigDecimal unitPrice;
-	private String description;
-	private String manufacturer;
-	@Category
-	private String category;
-	private long unitsInStock;
-	private long unitsInOrder;
-	private boolean discontinued;
-	private String condition;
-	
-	@JsonIgnore
-	private MultipartFile productImage;
+public class Product implements Serializable {
 
-	public Product() {
-		super();
-	}
+    private static final long serialVersionUID = 415259349960637805L;
+    @Pattern(regexp = "P[0-9]+", message = "{Pattern.Product.productId.validation}")
+    @ProductId
+    private String productId;
+    @Size(min = 4, max = 50, message = "{Size.Product.name.validation}")
+    private String name;
+    @Min(value = 0, message = "{Min.Product.unitPrice.validation}")
+    @Digits(integer = 8, fraction = 2, message = "{Digits.Product.unitPrice.validation}")
+    @NotNull(message = "{NotNull.Product.unitPrice.validation}")
+    private BigDecimal unitPrice;
+    private String description;
+    private String manufacturer;
+    @Category
+    private String category;
+    private long unitsInStock;
+    private long unitsInOrder;
+    private boolean discontinued;
+    private String condition;
 
-	public Product(String productId, String name, BigDecimal unitPrice) {
-		this.productId = productId;
-		this.name = name;
-		this.unitPrice = unitPrice;
-	}
+    @JsonIgnore
+    private MultipartFile productImage;
 
-	public String getProductId() {
-		return productId;
-	}
+    public Product() {
+        super();
+    }
 
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
+    public Product(String productId, String name, BigDecimal unitPrice) {
+        this.productId = productId;
+        this.name = name;
+        this.unitPrice = unitPrice;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getProductId() {
+        return productId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
-	public BigDecimal getUnitPrice() {
-		return unitPrice;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setUnitPrice(BigDecimal unitPrice) {
-		this.unitPrice = unitPrice;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
-	public String getManufacturer() {
-		return manufacturer;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setManufacturer(String manufacturer) {
-		this.manufacturer = manufacturer;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getCategory() {
-		return category;
-	}
+    public String getManufacturer() {
+        return manufacturer;
+    }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 
-	public long getUnitsInStock() {
-		return unitsInStock;
-	}
+    public String getCategory() {
+        return category;
+    }
 
-	public void setUnitsInStock(long unitsInStock) {
-		this.unitsInStock = unitsInStock;
-	}
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-	public long getUnitsInOrder() {
-		return unitsInOrder;
-	}
+    public long getUnitsInStock() {
+        return unitsInStock;
+    }
 
-	public void setUnitsInOrder(long unitsInOrder) {
-		this.unitsInOrder = unitsInOrder;
-	}
+    public void setUnitsInStock(long unitsInStock) {
+        this.unitsInStock = unitsInStock;
+    }
 
-	public boolean isDiscontinued() {
-		return discontinued;
-	}
+    public long getUnitsInOrder() {
+        return unitsInOrder;
+    }
 
-	public void setDiscontinued(boolean discontinued) {
-		this.discontinued = discontinued;
-	}
+    public void setUnitsInOrder(long unitsInOrder) {
+        this.unitsInOrder = unitsInOrder;
+    }
 
-	public String getCondition() {
-		return condition;
-	}
+    public boolean isDiscontinued() {
+        return discontinued;
+    }
 
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
+    public void setDiscontinued(boolean discontinued) {
+        this.discontinued = discontinued;
+    }
 
-	@XmlTransient
-	public MultipartFile getProductImage() {
-		return productImage;
-	}
+    public String getCondition() {
+        return condition;
+    }
 
-	public void setProductImage(MultipartFile productImage) {
-		this.productImage = productImage;
-	}
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		if (productId == null) {
-			if (other.productId != null)
-				return false;
-		} else if (!productId.equals(other.productId))
-			return false;
-		return true;
-	}
+    @XmlTransient
+    public MultipartFile getProductImage() {
+        return productImage;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((productId == null) ? 0 : productId.hashCode());
-		return result;
-	}
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
+    }
 
-	@Override
-	public String toString() {
-		return "Product [productId=" + productId + ", name=" + name + "]";
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Product other = (Product) obj;
+        if (productId == null) {
+            if (other.productId != null)
+                return false;
+        } else if (!productId.equals(other.productId))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((productId == null) ? 0 : productId.hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Product [productId=" + productId + ", name=" + name + "]";
+    }
 }

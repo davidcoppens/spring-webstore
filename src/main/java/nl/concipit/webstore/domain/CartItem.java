@@ -1,8 +1,11 @@
 package nl.concipit.webstore.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class CartItem {
+public class CartItem implements Serializable {
+
+    private static final long serialVersionUID = -9001427377751557506L;
     private Product product;
     private int quantity;
     private BigDecimal totalPrice;

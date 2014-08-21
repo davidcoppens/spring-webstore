@@ -2,6 +2,7 @@ package nl.concipit.webstore.service.impl;
 
 import nl.concipit.webstore.domain.Cart;
 import nl.concipit.webstore.domain.repository.CartRepository;
+import nl.concipit.webstore.exception.InvalidCartException;
 import nl.concipit.webstore.service.CartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,16 @@ public class CartServiceImpl implements CartService {
     @Override
     public void delete(String cartId) {
         cartRepository.delete(cartId);
+    }
+
+    @Override
+    public Cart validate(String cartId) {
+        Cart cart = cartRepository.read(cartId);
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            throw new InvalidCartException(cartId);
+        }
+        
+        return cart;
     }
 
 }

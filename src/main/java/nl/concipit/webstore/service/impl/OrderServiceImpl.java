@@ -1,7 +1,10 @@
 package nl.concipit.webstore.service.impl;
 
+import nl.concipit.webstore.domain.Order;
 import nl.concipit.webstore.domain.Product;
+import nl.concipit.webstore.domain.repository.OrderRepository;
 import nl.concipit.webstore.domain.repository.ProductRepository;
+import nl.concipit.webstore.service.CartService;
 import nl.concipit.webstore.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,12 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private ProductRepository repository;
 	
+	@Autowired
+	private OrderRepository orderRepository;
+	
+	@Autowired
+	private CartService cartService;
+	
 	@Override
 	public void processOrder(String productId, int quantity) {
 		Product product = repository.getProductById(productId);
@@ -23,5 +32,12 @@ public class OrderServiceImpl implements OrderService {
 		} 
 		product.setUnitsInStock(product.getUnitsInStock() - quantity);
 	}
+
+    @Override
+    public Long saveOrder(Order order) {
+        Long orderId = orderRepository.saveOrder(order);
+        cartService.delete(order.getCart().getCartId());
+        return orderId;
+    }
 
 }
